@@ -300,7 +300,10 @@
         var nation = $("#countrySelected option:selected").val()
 
         var updatedData = $.get('/api/v1/data/country/'.concat(nation));
-
+        document.getElementById("activeCases").innerHTML = results.active;
+        document.getElementById("recoveredCases").innerHTML = results.recovered;
+        document.getElementById("confirmedCases").innerHTML = results.confirmed;
+        document.getElementById("deathCases").innerHTML = results.deaths;
 
         updatedData.done(function (results) {
             console.log(results);
