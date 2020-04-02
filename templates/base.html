@@ -6,17 +6,31 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <meta name="description" content="COVID-19 Data analysis">
+  <meta name="author" content="Luiz Araújo <https://github.com/luizhfraraujo>">
 
   <title>COVID-19 Data Analysis</title>
 
   <!-- Custom fonts for this template-->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet"
+    type="text/css">
+  <link
+    href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+    rel="stylesheet">
 
   <!-- Custom styles for this template-->
   <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162622087-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-162622087-1');
+  </script>
+
 
 </head>
 
@@ -49,7 +63,7 @@
       <!-- Divider -->
       <hr class="sidebar-divider">
 
-     
+
 
 
       <!-- Sidebar Toggler (Sidebar) -->
@@ -74,8 +88,8 @@
             <i class="fa fa-bars"></i>
           </button>
 
-       
-         
+
+
 
         </nav>
         <!-- End of Topbar -->
@@ -84,7 +98,7 @@
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          
+
           {% block header %}{% endblock %}
           {% block content %}{% endblock %}
 
@@ -117,7 +131,8 @@
   </a>
 
   <!-- Logout Modal-->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
