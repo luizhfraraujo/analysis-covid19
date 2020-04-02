@@ -47,12 +47,13 @@ def get_data_country(country):
     if country != "all":
         df_country = df_covid_countries.where(df_covid_countries['country_region'] == country).copy()
         df_country.dropna(inplace=True)
+        print()
     # return flask.render_template('pages/dashboard.html',labels=df_ts_confirmed_brazil["date"], series=df_ts_confirmed_brazil["value"])
         return jsonify({
-                'confirmed': df_country["confirmed"].sum(),
-                'deaths': df_country["deaths"].sum(),
-                'recovered': df_country["recovered"].sum(),
-                'active': df_country["confirmed"].sum() - (df_country["recovered"].sum() + df_country["deaths"].sum()),
+                'confirmed': int(df_country["confirmed"].tail(1)),
+                'deaths': int(df_country["deaths"].tail(1)),
+                'recovered': int(df_country["recovered"].tail(1)),
+                'active': int(df_country["confirmed"].tail(1)) - (int(df_country["recovered"].tail(1)) + int(df_country["deaths"].tail(1))),
                 'chart':{
                 'confirmed': {
                     'series': df_country.groupby(["date"]).confirmed.sum().tolist(),
@@ -70,10 +71,10 @@ def get_data_country(country):
         })
     else:
         return jsonify({
-                'confirmed': int(df_covid_countries["confirmed"].sum()),
-                'deaths': int(df_covid_countries["deaths"].sum()),
-                'recovered': int(df_covid_countries["recovered"].sum()),
-                'active': int(df_covid_countries["confirmed"].sum()) - int(df_covid_countries["recovered"].sum() + df_covid_countries["deaths"].sum()),
+                'confirmed': int(df_covid_countries.groupby(["date"]).confirmed.sum().tail(1)),
+                'deaths': int(df_covid_countries.groupby(["date"]).deaths.sum().tail(1)),
+                'recovered': int(df_covid_countries.groupby(["date"]).recovered.sum().tail(1)),
+                'active': int(df_covid_countries.groupby(["date"]).confirmed.sum().tail(1)) - (int(df_covid_countries.groupby(["date"]).recovered.sum().tail(1)) + int(df_covid_countries.groupby(["date"]).deaths.sum().tail(1))),
                 'chart':{
                 'confirmed': {
                     'series': df_covid_countries.groupby(["date"]).confirmed.sum().tolist(),
