@@ -10,7 +10,7 @@
 ![GitHub issues](https://img.shields.io/github/issues/luizhfraraujo/analysis-covid19)
 
 <div>
-    <img src="static/img/presentation.gif"></img>
+    <img src="static/img/sample.gif"></img>
 </div>
 
 ## Libraries
