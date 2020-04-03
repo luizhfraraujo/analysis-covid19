@@ -4,9 +4,11 @@
 
 <style>
     #mapid {
-        height: 380px;
+        height: 320px;
     }
 </style>
+<!-- Custom styles for this page -->
+<link href="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block header %}
@@ -28,15 +30,17 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Selecione um País</div>
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Selecione um País (Obs: Nomes estão Em Inglês)</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            <input type="text" id="countrySelected" list="countries-list" class="selectpicker form-control">
+                            <input type="text" id="countrySelected" list="countries-list"
+                                class="selectpicker form-control">
                             <datalist id="countries-list">
                                 <option>Todos</option>
                                 {% for country in countries %}
                                 <option value="{{ country }}">{{ country }}</option>
                                 {% endfor %}
                             </datalist>
+                            <p></p>
                             <!-- <select name="countrySelected" id="countrySelected" class="selectpicker form-control">
                                 <option value="all">Todos</option>
                                 {% for country in countries %}
@@ -112,11 +116,24 @@
 
 <!-- Content Row -->
 
-
 <div class="row">
 
-    <!-- Area Chart -->
-    <div class="col-md-12">
+
+    <div class="col-md-7">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Mapa</h6>
+
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div id="mapid"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -132,27 +149,73 @@
         </div>
     </div>
 
-</div>
 
+</div>
 
 
 <div class="row">
 
-    <div class="col-md-12">
-        <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Mapa</h6>
+    <!-- Area Chart -->
 
+
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">País/Região</h6>
             </div>
-            <!-- Card Body -->
             <div class="card-body">
-                <div id="mapid"></div>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="countriesTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Confirmados</th>
+                                <th>Recuperados</th>
+                                <th>Óbitos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Províncias/Estados</h6>
+            </div>
+            <div class="card-body">
+                <p>Obs.: Estamos trabalhando para adicionar os dados relacionados aos Estados Unidos nesta tabela.</p>
 
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="provincesTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Confirmados</th>
+                                <th>Recuperados</th>
+                                <th>Óbitos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+
+<!-- DataTales Example -->
+
 <!-- 
 <form class="form-inline">
     <div class="form-group">
@@ -175,7 +238,7 @@
     Chart.defaults.global.defaultFontColor = '#858796';
     var myLineChart;
     var nation = $("#countrySelected").val() ? $("#countrySelected").val() : "Todos";
-    
+
     var getData = $.get('/api/v1/data/country/'.concat(nation));
 
     getData.done(function (results) {
@@ -286,7 +349,7 @@
                     }],
                 },
                 legend: {
-                    display: false
+                    display: true
                 },
                 tooltips: {
                     backgroundColor: "rgb(255,255,255)",
@@ -464,6 +527,55 @@
     // });
     $('#countrySelected').on('change', fetchData)
 </script>
+
+
+
+<!-- Page level plugins -->
+<script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+        async function fetchData() {
+            const responseCountries = await fetch(`/api/v1/data/countries`);
+            const dataCountries = await responseCountries.json();
+
+            $('#countriesTable').DataTable({
+                data: dataCountries,
+                "columns": [
+                    { "data": "country_region" },
+                    { "data": "confirmed" },
+                    { "data": "recovered" },
+                    { "data": "deaths" },
+                ],
+                "order": [[1, "desc"]],
+                lengthMenu: [5, 10, 25, 50]
+            });
+
+            const responseProvinces = await fetch(`/api/v1/data/provinces`);
+            const dataProvinces = await responseProvinces.json();
+
+            $('#provincesTable').DataTable({
+                data: dataProvinces,
+                "columns": [
+                    { "data": "province_state" },
+                    { "data": "confirmed" },
+                    { "data": "recovered" },
+                    { "data": "deaths" },
+                ],
+                "order": [[1, "desc"]],
+                lengthMenu: [5, 10, 25, 50]
+            });
+        }
+
+        fetchData();
+
+    });
+
+</script>
+
+<!-- Page level custom scripts -->
+<!-- <script src="{{ url_for('static', filename='js/demo/datatables-demo.js') }}"></script> -->
 
 
 {% endblock %}
