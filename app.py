@@ -42,13 +42,21 @@ countries = df_covid_countries["country_region"].unique()
 def main():
     return flask.render_template('pages/dashboard.html',countries=countries)
 
+@app.route("/api/v1/maps/country/<string:country>")
+def get_map_data_country(country):
+    if country != "Todos":
+        df_country = df_covid_countries.where(df_covid_countries['country_region'] == country)
+        df_country.dropna(inplace=True)
+        return df_country.tail(1).to_json(orient='records')
+    else:
+        return df_covid_countries.groupby("country_region").tail(1).to_json(orient='records')
+
+
 @app.route("/api/v1/data/country/<string:country>")
-def get_data_country(country):   
-    if country != "all":
+def get_report_data_country(country):   
+    if country != "Todos":
         df_country = df_covid_countries.where(df_covid_countries['country_region'] == country).copy()
         df_country.dropna(inplace=True)
-        print()
-    # return flask.render_template('pages/dashboard.html',labels=df_ts_confirmed_brazil["date"], series=df_ts_confirmed_brazil["value"])
         return jsonify({
                 'confirmed': int(df_country["confirmed"].tail(1)),
                 'deaths': int(df_country["deaths"].tail(1)),

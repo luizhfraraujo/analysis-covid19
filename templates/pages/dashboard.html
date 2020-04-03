@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
 
-{% block header %}<h1 class="h3 mb-4 text-gray-800">Dashboard</h1>
+{% block head %}
+
+<style>
+    #mapid {
+        height: 380px;
+    }
+</style>
+{% endblock %}
+
+{% block header %}
+<h1 class="h3 mb-4 text-gray-800">Dashboard</h1>
 
 
 {% endblock %}
@@ -9,41 +19,39 @@
 <div class="row">
 
     <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
+
+</div>
+<!-- Content Row -->
+<div class="row">
+    <div class="col-xl-4 col-md-6 mb-4">
         <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Selecione um País</div>
-
-                        <!-- <form class="form-inline">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    
-                                </div>
-                            </div>
-                        </form> -->
-
-
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            <select name="countrySelected" id="countrySelected" class="selectpicker form-control">
+                            <input type="text" id="countrySelected" list="countries-list" class="selectpicker form-control">
+                            <datalist id="countries-list">
+                                <option>Todos</option>
+                                {% for country in countries %}
+                                <option value="{{ country }}">{{ country }}</option>
+                                {% endfor %}
+                            </datalist>
+                            <!-- <select name="countrySelected" id="countrySelected" class="selectpicker form-control">
                                 <option value="all">Todos</option>
                                 {% for country in countries %}
                                 <option value="{{ country }}">{{ country }}</option>
                                 {% endfor %}
-                            </select>
+                            </select> -->
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Content Row -->
-<div class="row">
-
     <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="col-xl-2 col-md-6 mb-4">
         <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -59,7 +67,7 @@
     </div>
 
     <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="col-xl-2 col-md-6 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -73,7 +81,7 @@
     </div>
 
     <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="col-xl-2 col-md-6 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -87,7 +95,7 @@
     </div>
 
     <!-- Pending Requests Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="col-xl-2 col-md-6 mb-4">
         <div class="card border-left-danger shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -101,6 +109,7 @@
     </div>
 </div>
 
+
 <!-- Content Row -->
 
 
@@ -111,21 +120,8 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Timeline</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                        aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Dropdown Header:</div>
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </div>
+                <h6 class="m-0 font-weight-bold text-primary">Linha do Tempo</h6>
+
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -135,6 +131,27 @@
             </div>
         </div>
     </div>
+
+</div>
+
+
+
+<div class="row">
+
+    <div class="col-md-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Mapa</h6>
+
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div id="mapid"></div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <!-- 
 <form class="form-inline">
@@ -152,12 +169,13 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script>
     Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
     Chart.defaults.global.defaultFontColor = '#858796';
     var myLineChart;
-    var nation = $("#countrySelected option:selected").val();
+    var nation = $("#countrySelected").val() ? $("#countrySelected").val() : "Todos";
+    
     var getData = $.get('/api/v1/data/country/'.concat(nation));
 
     getData.done(function (results) {
@@ -297,18 +315,18 @@
     })
 
     function updateChart() {
-        var nation = $("#countrySelected option:selected").val()
+        var nation = $("#countrySelected").val() ? $("#countrySelected").val() : "Todos";
 
         var updatedData = $.get('/api/v1/data/country/'.concat(nation));
 
 
         updatedData.done(function (results) {
-            
+
             document.getElementById("activeCases").innerHTML = results.active;
             document.getElementById("recoveredCases").innerHTML = results.recovered;
             document.getElementById("confirmedCases").innerHTML = results.confirmed;
             document.getElementById("deathCases").innerHTML = results.deaths;
-            
+
             myLineChart.data = {
                 labels: results.chart.deaths.labels,
                 datasets: [
@@ -366,4 +384,86 @@
     //$('#update').on('click', updateChart)
     $('#countrySelected').on('change', updateChart)
 </script>
+
+<script>
+    var mymap = L.map('mapid').setView([28.6448, -7.216721], 2.3);
+
+    async function fetchData() {
+        mymap.eachLayer(function (layer) {
+            mymap.removeLayer(layer);
+        });
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution:
+                'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY- SA</a>'
+        }).addTo(mymap);
+
+        var nation = $("#countrySelected").val() ? $("#countrySelected").val() : "Todos";
+        const response = await fetch(`/api/v1/maps/country/${nation}`);
+        const data = await response.json();
+
+        data.forEach(location => {
+            if (nation !== 'Todos') {
+                mymap.setView([location.lat, location.long], 5);
+                var date = new Date(location.date).toLocaleDateString("pt-BR");
+                L.circle([location.lat, location.long], {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.5,
+                    radius: 5 * location.confirmed
+                }).addTo(mymap).bindPopup(
+                    `<b>País</b>: ${location.country_region} <br/>
+                ${location.province_state ? "<b>Província/Estado</b>: " + location.province_state + "<br/>" : ""}
+                <b>Última Atualização:</b> ${date} <br/>
+                <b>Últimos dados:</b> <br/>
+                - Confirmados: ${location.confirmed}<br/>
+                - Ativos: ${location.confirmed - (location.recovered + location.deaths)}<br/>
+                - Recuperados: ${location.recovered}<br/>
+                - Óbitos: ${location.deaths}<br/>`
+                ).openPopup();
+            } else {
+                mymap.setView([28.6448, -7.216721], 2.3);
+                var date = new Date(location.date).toLocaleDateString("pt-BR");
+                L.circle([location.lat, location.long], {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.5,
+                    radius: 5 * location.confirmed
+                }).addTo(mymap).bindPopup(
+                    `<b>País</b>: ${location.country_region} <br/>
+                ${location.province_state ? "<b>Província/Estado</b>: " + location.province_state + "<br/>" : ""}
+                <b>Última Atualização:</b> ${date} <br/>
+                <b>Últimos dados:</b> <br/>
+                - Confirmados: ${location.confirmed}<br/>
+                - Ativos: ${location.confirmed - (location.recovered + location.deaths)}<br/>
+                - Recuperados: ${location.recovered}<br/>
+                - Óbitos: ${location.deaths}<br/>`
+                );
+            }
+
+
+
+            // Object.entries(obj).forEach(([key, value]) => {
+            //     console.log(`${key} ${value}`);
+            // });
+            // console.log('-------------------');
+        });
+    }
+
+    fetchData();
+
+
+
+    // var getData = $.get('/api/v1/maps/country/'.concat(nation));
+
+    // getData.done(function (results) {
+
+
+
+
+    // });
+    $('#countrySelected').on('change', fetchData)
+</script>
+
+
 {% endblock %}
