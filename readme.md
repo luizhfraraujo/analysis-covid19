@@ -9,6 +9,10 @@
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/luizhfraraujo/analysis-covid19)
 ![GitHub issues](https://img.shields.io/github/issues/luizhfraraujo/analysis-covid19)
 
+<div>
+    <img src="static/img/presentation.gif"></img>
+</div>
+
 ## Libraries
 
 * Python
